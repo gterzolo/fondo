@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Fondale con GPS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <h1>📍 Calcolo profondità GPS</h1>
+    <p id="coords">Attesa localizzazione...</p>
+    <p id="depth">Calcolo in corso...</p>
+
+    <script>
+        function success(position) {
+            const lat = position.coords.latitude.toFixed(6);
+            const lon = position.coords.longitude.toFixed(6);
+            const alt = position.coords.altitude;
+
+            document.getElementById("coords").textContent =
+                `Latitudine: ${lat}, Longitudine: ${lon}`;
+
+            if (alt !== null) {
+                document.getElementById("depth").textContent =
+                    `Altitudine GPS: ${alt.toFixed(2)} m`;
+            } else {
+                document.getElementById("depth").textContent =
+                    `Altitudine non disponibile.`;
+            }
+        }
+
+        function error(err) {
+            document.getElementById("coords").textContent =
+                `Errore GPS: ${err.message}`;
+            document.getElementById("depth").textContent = '';
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error, {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            });
+        } else {
+            document.getElementById("coords").textContent =
+                "Il tuo browser non supporta la geolocalizzazione.";
+        }
+    </script>
+</body>
+</html>
